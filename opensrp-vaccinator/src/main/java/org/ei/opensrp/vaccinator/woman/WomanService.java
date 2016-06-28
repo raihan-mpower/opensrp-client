@@ -77,7 +77,7 @@ public class WomanService {
         Log.d("followup submission : ", json.toString());
 
 //        alertService.changeAlertStatusToComplete(submission.entityId(),);
-        allTimelines.add(new TimelineEvent(submission.entityId(), "WOMANFOLLOWUP", LocalDate.parse(submission.getFieldValue("date")), "woman followup", json.toString(), null));
+        allTimelines.add(new TimelineEvent(submission.entityId(), "WOMANFOLLOWUP", LocalDate.parse(submission.getFieldValue("today")), "woman followup", json.toString(), null));
 
     }
 }

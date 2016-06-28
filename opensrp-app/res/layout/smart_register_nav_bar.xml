@@ -3,27 +3,34 @@
                 android:layout_width="fill_parent"
                 android:layout_height="@dimen/ec_main_header_height"
                 android:background="@color/light_blue"
-                android:focusableInTouchMode="true">
+                android:focusableInTouchMode="true"
+    android:id="@+id/register_nav_bar_container">
+
+    <LinearLayout android:id="@+id/homestacklayout"
+        android:layout_width="65dp"
+        android:layout_height="match_parent"
+        android:orientation="horizontal" android:padding="5dp">
 
     <ImageButton
-            android:id="@+id/btn_back_to_home"
-            android:layout_width="wrap_content"
-            android:layout_height="fill_parent"
-            android:layout_alignParentLeft="true"
-            android:layout_centerVertical="true"
-            android:scaleType="center"
-            android:src="@drawable/homestacks"
-            android:background="@drawable/transparent_gray_background"
-            android:paddingLeft="8dp"
-            android:paddingRight="8dp"/>
+        android:id="@+id/btn_back_to_home"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerVertical="true"
+        android:layout_alignParentLeft="true"
+        android:src="@drawable/homestacks"
+        android:background="@drawable/transparent_gray_background"
+        android:padding="8dp" />
+
+    </LinearLayout>
 
     <ImageView
-            android:id="@+id/home_title_separator"
-            android:layout_width="@dimen/smart_register_nav_bar_separator"
-            android:layout_height="fill_parent"
-            android:src="@drawable/separator"
-            android:scaleType="fitXY"
-            android:layout_toRightOf="@+id/btn_back_to_home"/>
+        android:id="@+id/home_title_separator"
+        android:layout_width="@dimen/smart_register_nav_bar_separator"
+        android:layout_height="fill_parent"
+        android:src="@drawable/separator"
+        android:scaleType="fitXY"
+        android:layout_toRightOf="@+id/homestacklayout"/>
+
 
     <LinearLayout
             android:id="@+id/title_layout"
@@ -68,7 +75,7 @@
                 android:id="@+id/edt_search"
                 android:layout_width="@dimen/ec_main_header_search_box_width"
                 android:layout_height="fill_parent"
-                android:hint="@string/str_ec_search_hint"
+                android:hint="@string/str_ec_search_hint" android:textColorHint="@color/text_black"
                 android:textSize="17sp"
                 android:singleLine="true"
                 android:ellipsize="end"
@@ -94,7 +101,9 @@
             android:paddingRight="22dp"
             android:gravity="center"
             android:src="@drawable/ic_plus"
-            android:background="@drawable/transparent_gray_background"/>
+            android:background="@drawable/transparent_gray_background"
+        android:paddingTop="10dp"
+        android:paddingBottom="10dp" />
 
     <ImageView
             android:layout_width="@dimen/smart_register_nav_bar_separator"
@@ -139,7 +148,12 @@
             android:scaleType="fitXY"
             android:layout_toRightOf="@+id/sort_selection"/>
 
-    <org.ei.opensrp.view.customControls.CustomFontTextView
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"></LinearLayout>
+
+        <org.ei.opensrp.view.customControls.CustomFontTextView
             android:id="@+id/service_mode_selection"
             android:layout_width="wrap_content"
             android:layout_height="fill_parent"

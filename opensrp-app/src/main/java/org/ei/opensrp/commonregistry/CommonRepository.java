@@ -2,13 +2,11 @@ package org.ei.opensrp.commonregistry;
 
 import android.content.ContentValues;
 import android.database.Cursor;
-import android.util.Log;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
 import net.sqlcipher.database.SQLiteDatabase;
-import net.sqlcipher.database.SQLiteQueryBuilder;
 
 import org.apache.commons.lang3.ArrayUtils;
 import org.ei.opensrp.repository.DrishtiRepository;
@@ -186,7 +184,7 @@ public class CommonRepository extends DrishtiRepository {
         database.update(tableName, contentValues, ID_COLUMN + " = ?", new String[]{caseId});
     }
 
-    public  List<CommonPersonObject> customQuery(String sql ,String[] selections,String tableName){
+    public  List<CommonPersonObject> customQuery(String sql , String[] selections, String tableName){
 
         SQLiteDatabase database = masterRepository.getReadableDatabase();
         Cursor cursor = database.rawQuery(sql,selections);
@@ -194,8 +192,28 @@ public class CommonRepository extends DrishtiRepository {
         return readAllcommonForField(cursor, tableName);
     }
 
+    public  ArrayList<HashMap<String, String>> rawQuery(String sql){
+        SQLiteDatabase database = masterRepository.getReadableDatabase();
+        Cursor cursor = database.rawQuery(sql, null);
+        ArrayList<HashMap<String, String>> maplist = new ArrayList<HashMap<String, String>>();
+        // looping through all rows and adding to list
+        if (cursor.moveToFirst()) {
+            do {
+                HashMap<String, String> map = new HashMap<String, String>();
+                for(int i=0; i<cursor.getColumnCount();i++)
+                {
+                    map.put(cursor.getColumnName(i), cursor.getString(i));
+                }
 
-    public List<CommonPersonObject> readAllcommonForField(Cursor cursor ,String tableName) {
+                maplist.add(map);
+            } while (cursor.moveToNext());
+        }
+        cursor.close();
+        // return contact list
+        return maplist;
+    }
+
+    public List<CommonPersonObject> readAllcommonForField(Cursor cursor , String tableName) {
         List<CommonPersonObject> commons = new ArrayList<CommonPersonObject>();
         try {
             cursor.moveToFirst();
@@ -221,7 +239,7 @@ public class CommonRepository extends DrishtiRepository {
         return commons;
     }
 
-    public  List<CommonPersonObject> customQueryForCompleteRow(String sql ,String[] selections,String tableName){
+    public  List<CommonPersonObject> customQueryForCompleteRow(String sql , String[] selections, String tableName){
 
         SQLiteDatabase database = masterRepository.getReadableDatabase();
         Cursor cursor = database.rawQuery(sql,selections);
@@ -229,7 +247,7 @@ public class CommonRepository extends DrishtiRepository {
         return readAllcommonFor(cursor, tableName);
     }
 
-    private List<CommonPersonObject> readAllcommonFor(Cursor cursor ,String tableName) {
+    private List<CommonPersonObject> readAllcommonFor(Cursor cursor , String tableName) {
         List<CommonPersonObject> commons = new ArrayList<CommonPersonObject>();
         try {
             cursor.moveToFirst();

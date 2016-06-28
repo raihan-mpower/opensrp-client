@@ -1,6 +1,8 @@
 package org.ei.opensrp.util;
 
 import android.content.Context;
+import android.content.SharedPreferences;
+import android.preference.PreferenceManager;
 import android.util.Xml;
 
 import org.ei.opensrp.domain.SyncStatus;
@@ -188,6 +190,7 @@ public class FormUtils {
 
             String xml = writer.toString();
             //xml = xml.replaceAll("<?xml version='1.0' encoding='UTF-8' standalone='yes' ?>","");//56 !!!this ain't working
+            //Add model and instance tags
             xml = xml.substring(56);
             System.out.println(xml);
 
@@ -199,6 +202,46 @@ public class FormUtils {
             e.printStackTrace();
         }
         return "";
+    }
+
+    public String getPreviouslySavedDataForForm(String formName, String overridesStr, String id){
+        try {
+            SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(mContext);
+            String savedDataKey = formName + "savedPartialData";
+            String overridesKey = formName + "overrides";
+            String idKey = formName + "id";
+
+            JSONObject overrides = new JSONObject();
+
+            if (overrides != null){
+                JSONObject json = new JSONObject(overridesStr);
+                String s = json.getString("fieldOverrides");
+                overrides = new JSONObject(s);
+            }
+
+            boolean idIsConsistent = id == null && !sharedPref.contains(idKey) ||
+                    id != null && sharedPref.contains(idKey) && sharedPref.getString(idKey, null).equals(id);
+
+            if (sharedPref.contains(savedDataKey) && sharedPref.contains(overridesKey) && idIsConsistent){
+                String savedDataStr = sharedPref.getString(savedDataKey, null);
+                String savedOverridesStr = sharedPref.getString(overridesKey, null);
+
+
+                // the previously saved data is only returned if the overrides and id are the same ones used previously
+                if (savedOverridesStr.equals(overrides.toString())) {
+                    SharedPreferences.Editor editor = sharedPref.edit();
+                    //after retrieving the value delete it from shared pref.
+                    editor.remove(savedDataKey);
+                    editor.remove(overridesKey);
+                    editor.remove(idKey);
+                    editor.apply();
+                    return savedDataStr;
+                }
+            }
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+        return null;
     }
 
     private void writeXML(Element node, XmlSerializer serializer, JSONObject fieldOverrides, JSONObject formDefinition, JSONObject entityJson, String parentId){
@@ -232,9 +275,8 @@ public class FormUtils {
                     Element child = (Element) entries.item(i);
                     String fieldName = child.getNodeName();
 
-                    if(!subFormNames.isEmpty() && subFormNames.contains(fieldName))
-                    {
-                        /* its a subform element process it */
+                    if(!subFormNames.isEmpty() && subFormNames.contains(fieldName)) {
+                        /** its a subform element process it **/
                         // get the subform definition
                         JSONArray subForms = formDefinition.getJSONObject("form").getJSONArray("sub_forms");
                         JSONObject subFormDefinition = retriveSubformDefinitionForBindPath(subForms, fieldName);
@@ -258,26 +300,27 @@ public class FormUtils {
                                     writeXML(child, serializer, fieldOverrides, subFormDefinition, childEntityJson, entityId);
                                 }
                             }else{
-                                //writeXML(child, serializer, fieldOverrides, subFormDefinition, new JSONObject(), entityId);
+                                writeXML(child, serializer, fieldOverrides, subFormDefinition, new JSONObject(), entityId);
                             }
                         }
-                    }
-                    else
-                    {
+                    } // Check if the node contains other elements
+                    else if(hasChildElements(child)){
+                        writeXML(child, serializer, fieldOverrides, formDefinition, new JSONObject(), entityId);
+                    }else {
                         //its not a sub-form element write its value
                         serializer.startTag("", fieldName);
                         // write the xml attributes
                         writeXMLAttributes(child, serializer, null, null); // a value node doesn't have id or relationaId fields
                         //write the node value
                         String value = retrieveValueForNodeName(fieldName, entityJson, formDefinition);
-                        //write the node value
-                        if (value != null){
-                            serializer.text(value);
-                        }
 
                         //overwrite the node value with contents from overrides map
                         if (fieldOverrides.has(fieldName)) {
-                            serializer.text(fieldOverrides.getString(fieldName));
+                            value = fieldOverrides.getString(fieldName);
+                        }
+                        //write the node value
+                        if (value != null){
+                            serializer.text(value);
                         }
 
                         serializer.endTag("", fieldName);
@@ -290,6 +333,21 @@ public class FormUtils {
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
+    }
+
+    /**
+     * Checks if the provided node has Child elements
+     * @param element
+     * @return
+     */
+    public static boolean hasChildElements(Node element) {
+        NodeList children = element.getChildNodes();
+        for (int i = 0;i < children.getLength();i++) {
+            if (children.item(i).getNodeType() == Node.ELEMENT_NODE) {
+                return true;
+            }
+        }
+        return false;
     }
 
     /**
@@ -344,11 +402,11 @@ public class FormUtils {
                                 if (entityJson.has(keyName)){
                                     return entityJson.getString(keyName);
                                 }else{
-                                    return "";
+                                    return null;
                                 }
                             }else{
                                 // the shouldLoadValue flag isnt set
-                                return "";
+                                return null;
                             }
                         }
                     }
@@ -357,7 +415,7 @@ public class FormUtils {
         }catch (Exception e){
             e.printStackTrace();
         }
-        return "";
+        return null;
     }
 
     /**
@@ -490,7 +548,7 @@ public class FormUtils {
                 item.put("value", value);
             }
 
-            if (shouldLoadValue && overrides.has(item.getString("name"))){
+            if (shouldLoadValue && overrides.has(itemName)){
                 if (!item.has("value")) // if the value is not set use the value in the overrides filed
                     item.put("value", overrides.getString(item.getString("name")));
             }

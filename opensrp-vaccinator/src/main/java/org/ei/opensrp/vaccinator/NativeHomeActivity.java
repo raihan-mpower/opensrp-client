@@ -1,11 +1,9 @@
 package org.ei.opensrp.vaccinator;
 
-import android.app.ActionBar;
 import android.app.Activity;
-import android.app.AlertDialog;
 import android.app.Fragment;
 import android.app.FragmentTransaction;
-import android.content.DialogInterface;
+import android.content.Intent;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -20,7 +18,6 @@ import org.ei.opensrp.service.PendingFormSubmissionService;
 import org.ei.opensrp.sync.SyncAfterFetchListener;
 import org.ei.opensrp.sync.SyncProgressIndicator;
 import org.ei.opensrp.sync.UpdateActionsTask;
-import org.ei.opensrp.vaccinator.field.FieldMonitorSmartRegisterActivity;
 import org.ei.opensrp.view.activity.SecuredActivity;
 import org.ei.opensrp.view.contract.HomeContext;
 import org.ei.opensrp.view.controller.NativeAfterANMDetailsFetchListener;
@@ -80,7 +77,8 @@ public class NativeHomeActivity extends SecuredActivity {
     private TextView pncRegisterClientCountView;
     private TextView fpRegisterClientCountView;
     private TextView childRegisterClientCountView;
-    private TextView fieldRegisterClientCountView;
+    private TextView fieldRegisterClientCountMView;
+    private TextView fieldRegisterClientCountDView;
 
     @Override
     protected void onCreation() {
@@ -119,14 +117,16 @@ public class NativeHomeActivity extends SecuredActivity {
             imgButtonChild.setOnClickListener(onRegisterStartListener);
         }
             findViewById(R.id.btn_reporting).setOnClickListener(onButtonsClickListener);
-        findViewById(R.id.btn_videos).setOnClickListener(onButtonsClickListener);
+        findViewById(R.id.btn_provider_profile).setOnClickListener(onButtonsClickListener);
 
      //   ecRegisterClientCountView = (TextView) findViewById(R.id.txt_ec_register_client_count);
      //   pncRegisterClientCountView = (TextView) findViewById(R.id.txt_pnc_register_client_count);
         womanRegisterClientCountView = (TextView) findViewById(R.id.txt_woman_register_client_count);
      //   fpRegisterClientCountView = (TextView) findViewById(R.id.txt_fp_register_client_count);txt_field_register_client_count
         childRegisterClientCountView = (TextView) findViewById(R.id.txt_child_register_client_count);
-        fieldRegisterClientCountView = (TextView) findViewById(R.id.txt_field_register_client_count);
+        fieldRegisterClientCountDView = (TextView) findViewById(R.id.txt_field_register_client_countd);
+        fieldRegisterClientCountMView = (TextView) findViewById(R.id.txt_field_register_client_countm);
+
     }
 
     private void initialize() {
@@ -165,16 +165,21 @@ public class NativeHomeActivity extends SecuredActivity {
     private void updateRegisterCounts(HomeContext homeContext) {
         CommonPersonObjectController childController = new CommonPersonObjectController(context.allCommonsRepositoryobjects("pkchild"),
                 context.allBeneficiaries(), context.listCache(),
-                context.personObjectClientsCache(), "first_name", "pkchild", "child_reg_date",
+                context.personObjectClientsCache(), "first_name", "pkchild", "client_reg_date",
                 CommonPersonObjectController.ByColumnAndByDetails.byDetails );
         CommonPersonObjectController womanController = new CommonPersonObjectController(context.allCommonsRepositoryobjects("pkwoman"),
                 context.allBeneficiaries(), context.listCache(),
                 context.personObjectClientsCache(), "first_name", "pkwoman", "client_reg_date",
                 CommonPersonObjectController.ByColumnAndByDetails.byDetails.byDetails );
 
-        CommonPersonObjectController fieldController = new CommonPersonObjectController(context.allCommonsRepositoryobjects("field"),
+        CommonPersonObjectController fieldControllerD = new CommonPersonObjectController(context.allCommonsRepositoryobjects("stock"),
                 context.allBeneficiaries(), context.listCache(),
-                context.personObjectClientsCache(), "date", "field", "report",
+                context.personObjectClientsCache(), "date", "stock", "report", "daily", CommonPersonObjectController.ByColumnAndByDetails.byColumn, "report",
+                CommonPersonObjectController.ByColumnAndByDetails.byColumn );
+
+        CommonPersonObjectController fieldControllerM = new CommonPersonObjectController(context.allCommonsRepositoryobjects("stock"),
+                context.allBeneficiaries(), context.listCache(),
+                context.personObjectClientsCache(), "date", "stock", "report", "monthly", CommonPersonObjectController.ByColumnAndByDetails.byColumn, "report",
                 CommonPersonObjectController.ByColumnAndByDetails.byColumn );
 
        // ecRegisterClientCountView.setText(valueOf(hhcontroller.getClients().size()));
@@ -183,7 +188,8 @@ public class NativeHomeActivity extends SecuredActivity {
      //   fpRegisterClientCountView.setText(valueOf(elcocontroller.getClients().size()));
 //        Log.d("child count cin ", childController.getClients().size()+"");
         childRegisterClientCountView.setText(valueOf(childController.getClients().size()));
-        fieldRegisterClientCountView.setText(valueOf(fieldController.getClients().size()));
+        fieldRegisterClientCountDView.setText(valueOf(fieldControllerD.getClients().size())+" D");
+        fieldRegisterClientCountMView.setText(valueOf(fieldControllerM.getClients().size())+" M");
     }
 
     @Override
@@ -259,16 +265,8 @@ public class NativeHomeActivity extends SecuredActivity {
         @Override
         public void onClick(View view) {
             switch (view.getId()) {
-                /*case R.id.btn_ec_register:
-                    navigationController.startECSmartRegistry();
-                    break;*/
-
-                /*case R.id.btn_anc_register:
-                    navigationController.startANCSmartRegistry();
-                    break;*/
-
                 case R.id.btn_field_register:
-                    AlertDialog.Builder builder = new AlertDialog.Builder(activity);
+                    /*AlertDialog.Builder builder = new AlertDialog.Builder(activity);
                     builder.setTitle(R.string.pick_report);
                     builder.setItems(new String[]{"Monthly", "Daily"}, new DialogInterface.OnClickListener() {
                         public void onClick(DialogInterface dialog, int which) {
@@ -280,13 +278,10 @@ public class NativeHomeActivity extends SecuredActivity {
                                 FieldMonitorSmartRegisterActivity.sortbymonth = false;
                             } // The 'which' argument contains the index position
                             // of the selected item
-                            dialog.dismiss();
+                            dialog.dismiss();*/
                             navigationController.startFPSmartRegistry();
-                        }
-                    }).show();
-
-
-
+//                        }
+//                    }).show();
                     break;
 
                 case R.id.btn_child_register_new:
@@ -309,8 +304,8 @@ public class NativeHomeActivity extends SecuredActivity {
                     navigationController.startReports();
                     break;
 
-                case R.id.btn_videos:
-                    navigationController.startVideos();
+                case R.id.btn_provider_profile:
+                    activity.startActivity(new Intent(activity, ProviderProfileActivity.class));
                     break;
             }
         }

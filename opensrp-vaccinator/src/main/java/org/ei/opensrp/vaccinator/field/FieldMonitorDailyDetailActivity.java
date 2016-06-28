@@ -1,119 +1,165 @@
 package org.ei.opensrp.vaccinator.field;
 
-import android.app.Activity;
-import android.os.Bundle;
-import android.util.Log;
-import android.view.Window;
+import android.widget.TableLayout;
+import android.widget.TableRow;
 import android.widget.TextView;
 
 import org.ei.opensrp.Context;
-import org.ei.opensrp.commonregistry.CommonPersonObjectClient;
+import org.ei.opensrp.commonregistry.CommonPersonObject;
 import org.ei.opensrp.vaccinator.R;
+import org.ei.opensrp.vaccinator.application.template.DetailActivity;
+import org.joda.time.DateTime;
 
-import java.util.Map;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.HashMap;
+import java.util.List;
 
-/**
- * Created by engrmahmed14@gmail.com on 12/13/15.
- */
-public class FieldMonitorDailyDetailActivity extends Activity {
-    public static Map<String, String> userMap;
-    public static Map<String, String> usedVaccines;
-    public static CommonPersonObjectClient fieldclient;
-    //private Map<String, String> WastedVaccines;
+import static util.Utils.addToRow;
+import static util.Utils.convertDateFormat;
+import static util.Utils.getDataRow;
+import static util.Utils.getTotalUsed;
+import static util.Utils.getValue;
+import static util.Utils.providerDetails;
 
-
+public class FieldMonitorDailyDetailActivity extends DetailActivity {
+    @Override
+    protected int layoutResId() {
+        return R.layout.field_detail_daily_activity;
+    }
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        requestWindowFeature(Window.FEATURE_NO_TITLE);
-        super.onCreate(savedInstanceState);
+    protected String pageTitle() {
+        return "Report Detail (Daily)";
+    }
 
-//        Context context = Context.getInstance();
+    @Override
+    protected String titleBarId() {
+        return "";
+    }
 
+    @Override
+    protected Class onBackActivity() {
+        return FieldMonitorSmartRegisterActivity.class;
+    }
 
-            //setting view
-            setContentView(R.layout.field_detail_daily_activity);
+    @Override
+    protected Integer profilePicContainerId() { return null; }
 
-            TextView vaccinatorIdTextView =(TextView)findViewById(R.id.fielddetail_vaccinatorid);
-            TextView vaccinatorNameTextView =(TextView)findViewById(R.id.fielddetail_vaccinator_name);
-            TextView centerIdTextView =(TextView)findViewById(R.id.fielddetail_centerid);
-            TextView ucTextView =(TextView)findViewById(R.id.fielddetail_uc);
-        vaccinatorIdTextView.setText(userMap.get("provider_id"));
-        vaccinatorNameTextView.setText(userMap.get("provider_id"));
-        centerIdTextView.setText(userMap.get("provider_location_id"));
-        ucTextView.setText(userMap.get("provider_location_id"));
+    @Override
+    protected Integer defaultProfilePicResId(){ return null; };
 
+    @Override
+    protected String bindType() {
+        return "stock";
+    }
 
-            TextView bcgUsedTextView =(TextView)findViewById(R.id.fielddetail_bcg_used);
-            TextView bcgWastedTextView =(TextView)findViewById(R.id.fielddetail_bcg_wasted);
+    @Override
+    protected boolean allowImageCapture() {
+        return false;
+    }
 
-    // String bcgWasted=fieldclient.getDetails().get("bcg_wasted");
-        String bcgWasted=fieldclient.getDetails().get("bcg_wasted")!=null?fieldclient.getDetails().get("bcg_wasted"):"N/A";
-        bcgWastedTextView.setText(bcgWasted);
-        bcgUsedTextView.setText(usedVaccines.get("bcg")!=null?usedVaccines.get("bcg"):"N/A");
+    @Override
+    protected void generateView() {
+        HashMap<String, String> provider =  providerDetails();
 
+        TableLayout dt = (TableLayout) findViewById(R.id.field_detail_info_table1);
 
+        TableRow tr = getDataRow(this, "Vaccinator ID", getValue(provider, "provider_id", false), null);
+        dt.addView(tr);
+        tr = getDataRow(this, "Vaccinator Name", getValue(provider, "provider_name", true), null);
+        dt.addView(tr);
+        tr = getDataRow(this, "Center", getValue(provider, "provider_location_id", true), null);
+        dt.addView(tr);
+        tr = getDataRow(this, "UC", getValue(provider, "provider_uc", true), null);
+        dt.addView(tr);
 
-        TextView opvUsedTextView =(TextView)findViewById(R.id.fielddetail_opv_used);
-        TextView opvWastedTextView =(TextView)findViewById(R.id.fielddetail_opv_wasted);
-        opvWastedTextView.setText(fieldclient.getDetails().get("opv_wasted")!=null?fieldclient.getDetails().get("opv_wasted"):"N/A");
-        opvUsedTextView.setText(usedVaccines.get("opv")!=null?usedVaccines.get("opv"):"N/A");
+        TableLayout dt2 = (TableLayout) findViewById(R.id.field_detail_info_table2);
 
-        TextView ipvUsedTextView =(TextView)findViewById(R.id.fielddetail_ipv_used);
-        TextView ipvWastedTextView =(TextView)findViewById(R.id.fielddetail_ipv_wasted);
-        ipvWastedTextView.setText(fieldclient.getDetails().get("ipv_wasted")!=null?fieldclient.getDetails().get("ipv_wasted"):"N/A");
-        ipvUsedTextView.setText(usedVaccines.get("ipv")!=null?usedVaccines.get("ipv"):"N/A");
+        String date_entered = client.getColumnmaps().get("date");
 
+        DateTime date = DateTime.now().minusYears(200);
+        try {
+            date = new DateTime(new SimpleDateFormat("yyyy-MM-dd").parse(date_entered).getTime());
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
 
+        List<CommonPersonObject> cl = Context.getInstance().allCommonsRepositoryobjects("stock").customQueryForCompleteRow("SELECT * FROM stock WHERE date LIKE '" + date.toString("yyyy-MM") + "%' AND report='monthly' ", null, "stock");
+        CommonPersonObject mr = cl.size() == 0 ? null : cl.get(0);
+        
+        TableRow tr2 = getDataRow(this, "Monthly Target", mr==null?"No monthly report submitted":getValue(mr.getDetails(), "Target_assigned_for_vaccination_at_each_month", false), null);
+        dt2.addView(tr2);
+        tr2 = getDataRow(this, "Yearly Target", mr==null?"No monthly report submitted":getValue(mr.getDetails(), "Target_assigned_for_vaccination_for_the_year", false), null);
+        dt2.addView(tr2);
+        
+        String startDate = date.toString("yyyy-MM-dd");
+        String endDate = date.toString("yyyy-MM-dd");
 
-        TextView pentavalentUsedTextView =(TextView)findViewById(R.id.fielddetail_pentavalent_used);
-        TextView pentavalentWastedTextView =(TextView)findViewById(R.id.fielddetail_pentavalent_wasted);
-        pentavalentWastedTextView.setText(fieldclient.getDetails().get("penta_wasted")!=null?fieldclient.getDetails().get("penta_wasted"):"N/A");
-        pentavalentUsedTextView.setText(usedVaccines.get("pentavalent")!=null?usedVaccines.get("pentavalent"):"N/A");
+        String childTable = "pkchild";
+        String womanTable = "pkwoman";
 
+        ((TextView)findViewById(R.id.reporting_period)).setText(date.toString("dd/MM/yyyy"));
 
+        TableLayout tb = (TableLayout) findViewById(R.id.stock_vaccine_table);
+        tr = getDataRow(this);
+        addToRow(this, "BCG", tr, true);
+        addToRow(this, getTotalUsed(startDate, endDate, childTable, "bcg") + "", tr, true);
+        addToRow(this, getValue(client, "bcg_wasted", "0", false), tr, true);
+        tb.addView(tr);
 
+        tr = getDataRow(this);
+        addToRow(this, "OPV", tr, true);
+        addToRow(this, getTotalUsed(startDate, endDate, childTable, "opv0", "opv1", "opv2", "opv3") + "", tr, true);
+        addToRow(this, getValue(client, "opv_wasted", "0", false), tr, true);
+        tb.addView(tr);
 
-        TextView measlesUsedTextView =(TextView)findViewById(R.id.fielddetail_measles_used);
-        TextView measlesWastedTextView =(TextView)findViewById(R.id.fielddetail_measles_wasted);
-        measlesWastedTextView.setText(fieldclient.getDetails().get("measles_wasted")!=null?fieldclient.getDetails().get("measles_wasted"):"N/A");
-        measlesUsedTextView.setText(usedVaccines.get("measles")!=null?usedVaccines.get("measles"):"N/A");
+        tr = getDataRow(this);
+        addToRow(this, "IPV", tr, true);
+        addToRow(this, getTotalUsed(startDate, endDate, childTable, "ipv") + "", tr, true);
+        addToRow(this, getValue(client, "ipv_wasted", "0", false), tr, true);
+        tb.addView(tr);
 
+        tr = getDataRow(this);
+        addToRow(this, "PCV", tr, true);
+        addToRow(this, getTotalUsed(startDate, endDate, childTable, "pcv1", "pcv2", "pcv3") + "", tr, true);
+        addToRow(this, getValue(client, "pcv_wasted", "0", false), tr, true);
+        tb.addView(tr);
 
-        TextView safetyboxesUsedTextView =(TextView)findViewById(R.id.fielddetail_safetyboxes_used);
-        TextView safetyboxesWastedTextView =(TextView)findViewById(R.id.fielddetail_safetyboxes_wasted);
-        safetyboxesWastedTextView.setText(fieldclient.getDetails().get("safety_boxes_wasted")!=null?fieldclient.getDetails().get("safety_boxes_wasted"):"N/A");
-        safetyboxesUsedTextView.setText(usedVaccines.get("safety_boxes")!=null?usedVaccines.get("safety_boxes"):"N/A");
+        tr = getDataRow(this);
+        addToRow(this, "PENTAVALENT", tr, true);
+        addToRow(this, getTotalUsed(startDate, endDate, childTable, "penta1", "penta2", "penta3") + "", tr, true);
+        addToRow(this, getValue(client, "penta_wasted", "0", false), tr, true);
+        tb.addView(tr);
 
+        tr = getDataRow(this);
+        addToRow(this, "MEASLES", tr, true);
+        addToRow(this, getTotalUsed(startDate, endDate, childTable, "measles1", "measles2") + "", tr, true);
+        addToRow(this, getValue(client, "measles_wasted", "0", false), tr, true);
+        tb.addView(tr);
 
+        tr = getDataRow(this);
+        addToRow(this, "TETNUS", tr, true);
+        addToRow(this, getTotalUsed(startDate, endDate, womanTable, "tt1", "tt2", "tt3", "tt4", "tt5") + "", tr, true);
+        addToRow(this, getValue(client, "tt_wasted", "0", false), tr, true);
+        tb.addView(tr);
 
-        TextView syringesUsedTextView =(TextView)findViewById(R.id.fielddetail_syringes_used);
-        TextView syringesWastedTextView =(TextView)findViewById(R.id.fielddetail_syringes_wasted);
-        syringesWastedTextView.setText(fieldclient.getDetails().get("syringes_wasted")!=null?fieldclient.getDetails().get("syringes_wasted"):"N/A");
-        syringesUsedTextView.setText(usedVaccines.get("syringes")!=null?usedVaccines.get("syringes"):"N/A");
+        tr = getDataRow(this);
+        addToRow(this, "DILUTANTS", tr, true);
+        addToRow(this, "N/A", tr, true);
+        addToRow(this, getValue(client, "dilutants_wasted", "0", false), tr, true);
+        tb.addView(tr);
 
+        tr = getDataRow(this);
+        addToRow(this, "SYRINGES", tr, true);
+        addToRow(this, "N/A", tr, true);
+        addToRow(this, getValue(client, "syringes_wasted", "0", false), tr, true);
+        tb.addView(tr);
 
-
-        TextView tetanusUsedTextView =(TextView)findViewById(R.id.fielddetail_tetanus_used);
-        TextView tetanusWastedTextView =(TextView)findViewById(R.id.fielddetail_tetanus_wasted);
-        tetanusWastedTextView.setText(fieldclient.getDetails().get("tt_wasted")!=null?fieldclient.getDetails().get("tt_wasted"):"N/A");
-        tetanusUsedTextView.setText(usedVaccines.get("tt")!=null?usedVaccines.get("tt"):"N/A");
-
-
-
-
-        TextView dilutantsUsedTextView =(TextView)findViewById(R.id.fielddetail_dilutants_used);
-        TextView dilutantsWastedTextView =(TextView)findViewById(R.id.fielddetail_dilutants_wasted);
-        dilutantsWastedTextView.setText(fieldclient.getDetails().get("dilutants_wasted")!=null?fieldclient.getDetails().get("dilutants_wasted"):"N/A");
-        dilutantsUsedTextView.setText(usedVaccines.get("dilutants")!=null?usedVaccines.get("dilutants"):"N/A");
-
-
-
-        TextView pcvUsedTextView =(TextView)findViewById(R.id.fielddetail_pcv_used);
-        TextView pcvWastedTextView =(TextView)findViewById(R.id.fielddetail_pcv_wasted);
-        pcvWastedTextView.setText(fieldclient.getDetails().get("pcv_wasted")!=null?fieldclient.getDetails().get("pcv_wasted"):"N/A");
-        pcvUsedTextView.setText(usedVaccines.get("pcv")!=null?usedVaccines.get("pcv"):"N/A");
-
-
+        tr = getDataRow(this);
+        addToRow(this, "SAFETY BOXES", tr, true);
+        addToRow(this, "N/A", tr, true);
+        addToRow(this, getValue(client, "safety_boxes_wasted", "0" , false), tr, true);
+        tb.addView(tr);
     }
 }

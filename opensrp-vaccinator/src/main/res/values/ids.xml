@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <item name="stock_detail_holder" type="id" />
+    <item name="client_details_tag" type="id" />
+    <item name="vaccine_stock_used_tag" type="id" />
+    <item name="vaccine_stock_wasted_tag" type="id" />
+</resources>

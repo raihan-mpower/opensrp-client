@@ -17,7 +17,6 @@ package widget;
 
 import android.content.Context;
 import android.content.res.Configuration;
-import android.content.res.TypedArray;
 import android.database.DataSetObserver;
 import android.util.AttributeSet;
 import android.util.Log;
@@ -30,8 +29,6 @@ import android.view.ViewTreeObserver.OnGlobalLayoutListener;
 import android.widget.Adapter;
 import android.widget.AdapterView;
 import android.widget.Scroller;
-
-import org.ei.opensrp.vaccinator.R;
 
 import java.util.EnumSet;
 import java.util.LinkedList;

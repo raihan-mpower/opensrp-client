@@ -42,6 +42,4 @@ public class WomanVaccineTable extends Fragment {
         }
         return rootView;//inflater.inflate(R.layout.fragment_woman_vaccine_table, container, false);
     }
-
-
 }

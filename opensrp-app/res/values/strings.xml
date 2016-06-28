@@ -2,7 +2,7 @@
 <resources>
     <string name="empty_string"></string>
     <string name="app_name">OpenSRP</string>
-    <string name="userNameEditText">Enter user name</string>
+    <string name="userNameEditText">Enter username</string>
     <string name="passwordEditText">Enter password</string>
     <string name="login_text">Log In</string>
     <string name="image_description">logo</string>
@@ -15,8 +15,14 @@
         this form will be cleared.
     </string>
     <string name="form_back_confirm_dialog_title">Confirm form close</string>
+    <string name="form_saved_dialog_title">Form Submission</string>
+    <string name="form_saved_success_dialog_message">Form saved successfully!</string>
+    <string name="form_saved_failed_dialog_message">Form saving encountered an error. </string>
+
     <string name="yes_button_label">Yes</string>
     <string name="no_button_label">No</string>
+
+    <string name="ok_button_label">OK</string>
 
     <string name="home_ec_label">Eligible Couple</string>
     <string name="home_fp_label">FP</string>
@@ -50,12 +56,12 @@
     <string name="header_edit"></string>
 
     <string name="couple_selection">All Eligible Couples</string>
-    <string name="str_ec_search_hint">Search EC Register</string>
+    <string name="str_ec_search_hint">Search</string>
     <string name="str_fp_search_hint">Search FP Register</string>
     <string name="str_pnc_search_hint">Search PNC Register</string>
     <string name="str_child_search_hint">Search Child Register</string>
     <string name="label_sorted_by">Sorted By:</string>
-    <string name="label_village">, Village:</string>
+    <string name="label_village"></string>
     <string name="ec_register_wife_age">({0})</string>
 
     <string name="ec_register_male_child">Male\n{0}</string>
@@ -113,8 +119,9 @@
     <string name="str_register_anc_investigations_form">ANC Investigations</string>
     <string name="str_register_anc_close_form">ANC Close</string>
 
-    <string name="str_reporting">Reporting</string>
+    <string name="str_reporting">Reports</string>
     <string name="str_videos">Videos</string>
+    <string name="str_provider_profile">Profile</string>
 
     <string name="child_register_title_in_short">Child:</string>
     <string name="child_service_mode_overview">Overview</string>

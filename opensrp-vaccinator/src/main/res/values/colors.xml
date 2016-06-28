@@ -1,7 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="client_dark_blue">#0000ff</color>
-    <color name="client_light_blue">#43a8f4</color>
-
-
+    <color name="alert_na">#ECECEC</color>
+    <color name="alert_upcoming">#D3EAF4</color>
+    <color name="alert_normal">#389CCA</color>
+    <color name="alert_urgent">#D13F3F</color>
+    <color name="alert_completed">#4FB45B</color>
+    <color name="alert_expired">#ECECEC</color>
 </resources>

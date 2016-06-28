@@ -12,7 +12,6 @@ public class WomanFollowupHandler implements FormSubmissionHandler {
 
     public WomanFollowupHandler(WomanService womanService) {
         this.womanService = womanService;
-
     }
 
     @Override

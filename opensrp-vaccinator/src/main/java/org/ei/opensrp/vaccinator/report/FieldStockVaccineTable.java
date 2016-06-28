@@ -9,9 +9,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import org.ei.opensrp.commonregistry.CommonPersonObject;
-import org.ei.opensrp.util.Log;
 import org.ei.opensrp.vaccinator.R;
-import org.w3c.dom.Text;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -61,12 +59,12 @@ public class FieldStockVaccineTable extends Fragment {
         }
 
         if(childObject != null) {
-            int opv0 = Integer.parseInt(childObject.getColumnmaps().get("opv_0") != null ? childObject.getColumnmaps().get("opv_0") : "0");
-            int opv1 = Integer.parseInt(childObject.getColumnmaps().get("opv_1") != null ? childObject.getColumnmaps().get("opv_1") : "0");
-            int opv2 = Integer.parseInt(childObject.getColumnmaps().get("opv_2") != null ? childObject.getColumnmaps().get("opv_2") : "0");
-            int opv3 = Integer.parseInt(childObject.getColumnmaps().get("opv_3") != null ? childObject.getColumnmaps().get("opv_3") : "0");
+            int opv0 = Integer.parseInt(childObject.getColumnmaps().get("opv0") != null ? childObject.getColumnmaps().get("opv0") : "0");
+            int opv1 = Integer.parseInt(childObject.getColumnmaps().get("opv1") != null ? childObject.getColumnmaps().get("opv1") : "0");
+            int opv2 = Integer.parseInt(childObject.getColumnmaps().get("opv2") != null ? childObject.getColumnmaps().get("opv2") : "0");
+            int opv3 = Integer.parseInt(childObject.getColumnmaps().get("opv3") != null ? childObject.getColumnmaps().get("opv3") : "0");
 
-            int opvUsed = opv0 + opv1 + opv2 + opv3;//Integer.parseInt(usedVaccines.get("opv_0")!=null?usedVaccines.get("opv_0"):"0")+Integer.parseInt(usedVaccines.get("opv_1")!=null?usedVaccines.get("opv_1"):"0")+Integer.parseInt(usedVaccines.get("opv_2)"!=null?usedVaccines.get("opv_2"):"0"));
+            int opvUsed = opv0 + opv1 + opv2 + opv3;//Integer.parseInt(usedVaccines.get("opv0")!=null?usedVaccines.get("opv0"):"0")+Integer.parseInt(usedVaccines.get("opv1")!=null?usedVaccines.get("opv1"):"0")+Integer.parseInt(usedVaccines.get("opv2)"!=null?usedVaccines.get("opv2"):"0"));
 
             opvUsedTextView.setText(opvUsed + "");
         } else {
@@ -81,7 +79,7 @@ public class FieldStockVaccineTable extends Fragment {
         if(fieldObject != null) {
             pentaBalanceTextView.setText(fieldObject.getDetails().get("penta_balance_in_hand") != null ? fieldObject.getDetails().get("penta_balance_in_hand") : "N/A");
             pentaReceivedTextView.setText(fieldObject.getDetails().get("penta_received") != null ? fieldObject.getDetails().get("penta_received") : "N/A");
-            int pentaUsed = Integer.parseInt(childObject.getColumnmaps().get("pentavalent_1") != null ? childObject.getColumnmaps().get("pentavalent_1") : "0") + Integer.parseInt(childObject.getColumnmaps().get("pentavalent_2") != null ? childObject.getColumnmaps().get("pentavalent_2") : "0") + Integer.parseInt(childObject.getColumnmaps().get("pentavalent_3") != null ? childObject.getColumnmaps().get("pentavalent_3") : "0");
+            int pentaUsed = Integer.parseInt(childObject.getColumnmaps().get("penta1") != null ? childObject.getColumnmaps().get("penta1") : "0") + Integer.parseInt(childObject.getColumnmaps().get("penta2") != null ? childObject.getColumnmaps().get("penta2") : "0") + Integer.parseInt(childObject.getColumnmaps().get("penta3") != null ? childObject.getColumnmaps().get("penta3") : "0");
 
             pentaUsedTextView.setText(pentaUsed + "");
         } else {
@@ -98,9 +96,9 @@ public class FieldStockVaccineTable extends Fragment {
             pcvReceivedTextView.setText(fieldObject.getDetails().get("pcv_received") != null ? fieldObject.getDetails().get("pcv_received") : "N/A");
         }
         if (childObject != null) {
-            int pcv1 = Integer.parseInt(childObject.getColumnmaps().get("pcv_1") != null ? childObject.getColumnmaps().get("pcv_1") : "0");
-            int pcv2 = Integer.parseInt(childObject.getColumnmaps().get("pcv_2") != null ? childObject.getColumnmaps().get("pcv_2") : "0");
-            int pcv3 = Integer.parseInt(childObject.getColumnmaps().get("pcv_3") != null ? childObject.getColumnmaps().get("pcv_3") : "0");
+            int pcv1 = Integer.parseInt(childObject.getColumnmaps().get("pcv1") != null ? childObject.getColumnmaps().get("pcv1") : "0");
+            int pcv2 = Integer.parseInt(childObject.getColumnmaps().get("pcv2") != null ? childObject.getColumnmaps().get("pcv2") : "0");
+            int pcv3 = Integer.parseInt(childObject.getColumnmaps().get("pcv3") != null ? childObject.getColumnmaps().get("pcv3") : "0");
             int pcvUsed = pcv1 + pcv2 + pcv3;
             pcvUsedTextView.setText(pcvUsed + "");
         } else {
@@ -117,7 +115,7 @@ public class FieldStockVaccineTable extends Fragment {
             measlesReceivedTextView.setText(fieldObject.getDetails().get("measles_received") != null ? fieldObject.getDetails().get("measles_received") : "N/A");
         }
         if (childObject != null) {
-            int measlesUsed = Integer.parseInt(childObject.getColumnmaps().get("measles_1") != null ? childObject.getColumnmaps().get("measles_1") : "0") + Integer.parseInt(childObject.getColumnmaps().get("measles_2") != null ? childObject.getColumnmaps().get("measles_2") : "0");
+            int measlesUsed = Integer.parseInt(childObject.getColumnmaps().get("measles1") != null ? childObject.getColumnmaps().get("measles1") : "0") + Integer.parseInt(childObject.getColumnmaps().get("measles2") != null ? childObject.getColumnmaps().get("measles2") : "0");
             measlesUsedTextView.setText(measlesUsed + "");
         } else {
             measlesUsedTextView.setText("N/A");

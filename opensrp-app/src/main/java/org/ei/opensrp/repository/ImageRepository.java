@@ -48,9 +48,16 @@ public class ImageRepository extends DrishtiRepository {
     public ProfileImage findByEntityId(String entityId) {
         SQLiteDatabase database = masterRepository.getReadableDatabase();
         Cursor cursor = database.query(Image_TABLE_NAME, Image_TABLE_COLUMNS, entityID_COLUMN + " = ?", new String[]{entityId}, null, null, null, null);
-        return readAll(cursor).get(0);
+        List<ProfileImage> l = readAll(cursor);
+        return l.size() == 0?null :l.get(0);
     }
 
+    public ProfileImage findByEntityId(String entityId, String type) {
+        SQLiteDatabase database = masterRepository.getReadableDatabase();
+        Cursor cursor = database.query(Image_TABLE_NAME, Image_TABLE_COLUMNS, entityID_COLUMN + " = ? AND " + filecategory_COLUMN + " = ? ", new String[]{entityId, type}, null, null, ID_COLUMN, null);
+        List<ProfileImage> l = readAll(cursor);
+        return l.size() == 0?null :l.get(l.size()-1);
+    }
 
 
     public void close(String caseId) {

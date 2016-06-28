@@ -28,16 +28,22 @@ import org.ei.opensrp.event.Listener;
 import org.ei.opensrp.repository.AllSharedPreferences;
 import org.ei.opensrp.sync.DrishtiSyncScheduler;
 import org.ei.opensrp.util.Log;
+import org.ei.opensrp.vaccinator.application.ConfigSyncReceiver;
 import org.ei.opensrp.view.BackgroundAction;
 import org.ei.opensrp.view.LockingBackgroundTask;
 import org.ei.opensrp.view.ProgressIndicator;
 import org.ei.opensrp.view.activity.SettingsActivity;
+import org.joda.time.DateTime;
+import org.joda.time.Hours;
+import org.json.JSONObject;
 
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Locale;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
+
+import util.Utils;
 
 import static android.preference.PreferenceManager.getDefaultSharedPreferences;
 import static android.view.inputmethod.InputMethodManager.HIDE_NOT_ALWAYS;
@@ -74,15 +80,18 @@ public class LoginActivity extends Activity {
         }catch(Exception e){
 
         }
+
         setContentView(org.ei.opensrp.R.layout.login);
+
+        getActionBar().setDisplayShowTitleEnabled(false);
 
         context = Context.getInstance().updateApplicationContext(this.getApplicationContext());
         initializeLoginFields();
         initializeBuildDetails();
         setDoneActionHandlerOnPasswordField();
         initializeProgressDialog();
-        getActionBar().setTitle("");
-        getActionBar().setIcon(getResources().getDrawable(org.ei.opensrp.R.drawable.logo));
+       // getActionBar().setTitle("");
+       // getActionBar().setIcon(getResources().getDrawable(org.ei.opensrp.R.drawable.logo));
       //  getActionBar().setBackgroundDrawable(getResources().getDrawable(R.color.action_bar_background));
         setLanguage();
 
@@ -161,8 +170,30 @@ public class LoginActivity extends Activity {
         progressDialog.setMessage(getString(org.ei.opensrp.R.string.loggin_in_dialog_message));
     }
 
-    private void localLogin(View view, String userName, String password) {
-        if (context.userService().isValidLocalLogin(userName, password)) {
+    private void localLogin(final View view, final String userName, final String password) {
+        String ld = Utils.getPreference(Context.getInstance().applicationContext(), "serverDatetime", "1970-01-01").replace(" ", "T");
+        int hrs = Hours.hoursBetween(new DateTime(ld), DateTime.now()).getHours();
+        if(hrs > 8 || hrs < -8){// since server datetime sync is not predictable user should have option to ignore and proceed
+            showMessageDialog(getResources().getString(R.string.invalid_device_date) + Utils.convertDateTimeFormat(ld, true) +". Press Cancel to ignore and proceed",
+                    new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialogInterface, int i) {
+                            view.setClickable(true);
+                        }
+                    },
+                    new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialogInterface, int i) {
+                            if (context.userService().isValidLocalLogin(userName, password)) {
+                                localLoginWith(userName, password);
+                            } else {
+                                showErrorDialog(getString(org.ei.opensrp.R.string.login_failed_dialog_message));
+                                view.setClickable(true);
+                            }
+                        }
+                    });
+        }
+        else if (context.userService().isValidLocalLogin(userName, password)) {
             localLoginWith(userName, password);
         } else {
             showErrorDialog(getString(org.ei.opensrp.R.string.login_failed_dialog_message));
@@ -171,10 +202,17 @@ public class LoginActivity extends Activity {
     }
 
     private void remoteLogin(final View view, final String userName, final String password) {
-        tryRemoteLogin(userName, password, new Listener<LoginResponse>() {
+        tryRemoteLogin(this, userName, password, new Listener<LoginResponse>() {
             public void onEvent(LoginResponse loginResponse) {
                 if (loginResponse == SUCCESS) {
-                    remoteLoginWith(userName, password, loginResponse.payload());
+                    String ld = Utils.getPreference(Context.getInstance().applicationContext(), "serverDatetime", "1970-01-01").replace(" ", "T");
+                    int hrs = Hours.hoursBetween(new DateTime(ld), DateTime.now()).getHours();
+                    if (false){//todo //hrs > 2 || hrs < -2) {// since server datetime is just synced it be equal upto 2 hours
+                        showErrorDialog(getResources().getString(R.string.invalid_device_date) + Utils.convertDateTimeFormat(ld, true));
+                        view.setClickable(true);
+                    } else {
+                        remoteLoginWith(userName, password, loginResponse.payload());
+                    }
                 } else {
                     if (loginResponse == null) {
                         showErrorDialog("Login failed. Unknown reason. Try Again");
@@ -197,6 +235,17 @@ public class LoginActivity extends Activity {
                     }
                 })
                 .create();
+        dialog.show();
+    }
+
+    private void showMessageDialog(String message, DialogInterface.OnClickListener ok, DialogInterface.OnClickListener cancel) {
+        AlertDialog dialog = new AlertDialog.Builder(this)
+                .setTitle(getString(org.ei.opensrp.R.string.login_failed_dialog_title))
+                .setMessage(message)
+                .setPositiveButton("OK", ok)
+                .setNegativeButton("Cancel", cancel)
+                .create();
+
         dialog.show();
     }
 
@@ -233,7 +282,7 @@ public class LoginActivity extends Activity {
         });
     }
 
-    private void tryRemoteLogin(final String userName, final String password, final Listener<LoginResponse> afterLoginCheck) {
+    private void tryRemoteLogin(final android.content.Context appContext, final String userName, final String password, final Listener<LoginResponse> afterLoginCheck) {
         LockingBackgroundTask task = new LockingBackgroundTask(new ProgressIndicator() {
             @Override
             public void setVisible() {
@@ -248,7 +297,13 @@ public class LoginActivity extends Activity {
 
         task.doActionInBackground(new BackgroundAction<LoginResponse>() {
             public LoginResponse actionToDoInBackgroundThread() {
-                return context.userService().isValidRemoteLogin(userName, password);
+                LoginResponse lr = context.userService().isValidRemoteLogin(userName, password);
+                try {
+                    ConfigSyncReceiver.fetchConfig(appContext, userName, password);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+                return lr;
             }
 
             public void postExecuteInUIThread(LoginResponse result) {
@@ -277,7 +332,16 @@ public class LoginActivity extends Activity {
 
     private void remoteLoginWith(String userName, String password, String userInfo) {
         context.userService().remoteLogin(userName, password, userInfo);
+
+        try{
+            Utils.writePreference(this, "team", new JSONObject(userInfo).getJSONObject("team").toString());
+        }
+        catch (Exception e){
+            e.printStackTrace();
+        }
+
         goToHome();
+
         DrishtiSyncScheduler.startOnlyIfConnectedToNetwork(getApplicationContext());
     }
 

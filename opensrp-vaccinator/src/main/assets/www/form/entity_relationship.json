@@ -9,11 +9,11 @@
   },
 
   {
-    "parent": "field",
+    "parent": "stock",
     "child": "reports",
-    "field": "field",
+    "field": "stock",
     "kind": "one_to_one",
-    "from": "field.id",
+    "from": "stock.id",
     "to": "reports.relationalid"
   },
   {

@@ -10,10 +10,10 @@ buildscript {
 }
 apply plugin: 'com.android.application'
 dependencies {
-    compile fileTree(include: ['*.jar'], dir: 'libs')
     compile project(':opensrp-app')
     compile 'com.android.support:design:22.2.1'
     compile 'com.android.support:support-v4:22.1.1'
+    compile 'com.squareup.picasso:picasso:2.5.2'
 }
 android {
     compileSdkVersion 22
@@ -24,12 +24,27 @@ android {
         minSdkVersion 16
         targetSdkVersion 22
         versionCode 1
-        versionName "0.02.2 alpha"
+        versionName "1.2.3"
+        multiDexEnabled true
     }
     buildTypes {
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+    }
+    productFlavors {
+        armv7 {
+            versionCode defaultConfig.versionCode + 2
+            ndk {
+                abiFilters "armeabi", ""
+            }
+        }
+        x86 {
+            versionCode defaultConfig.versionCode + 4
+            ndk {
+                abiFilters "x86", ""
+            }
         }
     }
     packagingOptions {

@@ -1,6 +1,5 @@
 package org.ei.opensrp.vaccinator.application;
 
-import android.app.Application;
 import android.content.res.Configuration;
 
 import org.ei.opensrp.Context;
@@ -28,11 +27,17 @@ public class VaccinatorApplication extends DrishtiApplication{
         context.updateApplicationContext(getApplicationContext());
         applyUserLanguagePreference();
         cleanUpSyncState();
+        startCESyncService(getApplicationContext());
+        ConfigSyncReceiver.scheduleFirstSync(getApplicationContext());
     }
 
     private void cleanUpSyncState() {
         DrishtiSyncScheduler.stop(getApplicationContext());
         context.allSharedPreferences().saveIsSyncInProgress(false);
+    }
+
+    private void startCESyncService(android.content.Context context){
+        CESyncReceiver.scheduleFirstSync(context);
     }
 
     @Override

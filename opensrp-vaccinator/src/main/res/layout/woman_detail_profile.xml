@@ -3,162 +3,43 @@
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="#ffffff">
+    android:background="#ffffff" >
 
     <LinearLayout
         android:orientation="horizontal"
         android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:weightSum="1">
+        android:layout_height="wrap_content" android:weightSum="11"
+        >
 
         <ImageView
             android:layout_width="@dimen/client_profile_pic_width"
-            android:layout_height="match_parent"
-            android:id="@+id/womandetailprofileview"
-            android:src="@drawable/pk_woman_icon"
+            android:layout_height="80dp"
+            android:id="@+id/woman_profilepic"
+            android:src="@drawable/pk_woman_avtar"
             android:layout_margin="5dp"
-            android:scaleType="fitXY"
-            android:layout_weight="0.15" />
+            android:scaleType="fitXY" />
 
-        <LinearLayout
-            android:orientation="vertical"
-            android:layout_width="200dp"
-            android:layout_height="match_parent"
-            android:layout_weight="0.15">
+        <TableLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="5"
+            android:id="@+id/woman_detail_info_table1"
+            android:background="@drawable/listview_background_rounded"
+            android:layout_margin="20dp"
+            android:layout_gravity="center_horizontal"
+            android:padding="10dp">
+        </TableLayout>
 
-            <org.ei.opensrp.view.customControls.CustomFontTextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textAppearance="?android:attr/textAppearanceLarge"
-                style="@style/CustomFontTextViewStyle.ListView.Medium"
-                android:text="Client Id :"
-                android:layout_margin="5dp"
-                android:id="@+id/womandetail_womanid_text"
-                android:textSize="14sp"
-                android:textColor="@color/text_black" />
-
-
-            <org.ei.opensrp.view.customControls.CustomFontTextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textAppearance="?android:attr/textAppearanceLarge"
-                style="@style/CustomFontTextViewStyle.ListView.Medium"
-                android:text="Woman Name :"
-                android:id="@+id/womandetail_womanname_text"
-                android:textSize="14sp"
-                android:layout_margin="5dp"
-                android:textColor="@color/text_black" />
-
-            <org.ei.opensrp.view.customControls.CustomFontTextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textAppearance="?android:attr/textAppearanceLarge"
-                style="@style/CustomFontTextViewStyle.ListView.Medium"
-                android:text="Husband's Name :"
-                android:id="@+id/womandetail_husbandname_text"
-                android:textSize="14sp"
-                android:layout_margin="5dp"
-                android:textColor="@color/text_black" />
-
-
-            <org.ei.opensrp.view.customControls.CustomFontTextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textAppearance="?android:attr/textAppearanceLarge"
-                style="@style/CustomFontTextViewStyle.ListView.Medium"
-                android:text="No of Children :"
-                android:id="@+id/womandetail_children_text"
-                android:textSize="14sp"
-                android:layout_margin="5dp"
-                android:textColor="@color/text_black" />
-        </LinearLayout>
-        <LinearLayout
-            android:orientation="vertical"
-            android:layout_width="270dp"
-            android:layout_weight="0.15"
-            android:layout_height="match_parent">
-
-            <org.ei.opensrp.view.customControls.CustomFontTextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textAppearance="?android:attr/textAppearanceLarge"
-                style="@style/CustomFontTextViewStyle.ListView.Medium"
-                android:text=""
-                android:layout_margin="5dp"
-                android:id="@+id/womandetail_womanid"
-                android:textSize="14sp"
-                android:textColor="@color/text_black" />
-
-            <org.ei.opensrp.view.customControls.CustomFontTextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textAppearance="?android:attr/textAppearanceLarge"
-                style="@style/CustomFontTextViewStyle.ListView.Medium"
-                android:text=""
-                android:id="@+id/womandetail_name"
-                android:textSize="14sp"
-                android:layout_margin="5dp"
-                android:textColor="@color/text_black" />
-
-            <org.ei.opensrp.view.customControls.CustomFontTextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textAppearance="?android:attr/textAppearanceLarge"
-                style="@style/CustomFontTextViewStyle.ListView.Medium"
-                android:text=""
-                android:id="@+id/womandetail_husbandname"
-                android:textSize="14sp"
-                android:layout_margin="5dp"
-                android:textColor="@color/text_black" />
-
-            <org.ei.opensrp.view.customControls.CustomFontTextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textAppearance="?android:attr/textAppearanceLarge"
-                style="@style/CustomFontTextViewStyle.ListView.Medium"
-                android:text=""
-                android:id="@+id/womandetail_nochildren"
-                android:textSize="14sp"
-                android:layout_margin="5dp"
-                android:textColor="@color/text_black" />
-        </LinearLayout>
-        <LinearLayout
-            android:orientation="vertical"
-            android:layout_width="100dp"
-            android:layout_height="match_parent"
-            android:layout_weight="0.15">
-
-            <org.ei.opensrp.view.customControls.CustomFontTextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textAppearance="?android:attr/textAppearanceLarge"
-                style="@style/CustomFontTextViewStyle.ListView.Medium"
-                android:text="Woman DOB :"
-                android:id="@+id/womandetail_womandob_text"
-                android:textSize="14sp"
-                android:layout_margin="5dp"
-                android:textColor="@color/text_black" />
-
-        </LinearLayout>
-
-        <LinearLayout
-            android:orientation="vertical"
-            android:layout_width="200dp"
-            android:layout_height="132dp"
-            android:layout_weight="0.15">
-
-            <org.ei.opensrp.view.customControls.CustomFontTextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textAppearance="?android:attr/textAppearanceLarge"
-                style="@style/CustomFontTextViewStyle.ListView.Medium"
-                android:text=""
-                android:id="@+id/womandetail_womandob"
-                android:textSize="14sp"
-                android:layout_margin="5dp"
-                android:textColor="@color/text_black" />
-
-        </LinearLayout>
+        <TableLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="6"
+            android:id="@+id/woman_detail_info_table2"
+            android:background="@drawable/listview_background_rounded"
+            android:layout_margin="20dp"
+            android:layout_gravity="center_horizontal"
+            android:padding="10dp">
+        </TableLayout>
 
     </LinearLayout>
 

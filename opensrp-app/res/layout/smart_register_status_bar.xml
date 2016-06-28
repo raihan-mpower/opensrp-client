@@ -5,21 +5,21 @@
               android:layout_height="@dimen/smart_register_status_bar_height"
               android:background="@color/status_bar_background_dark_grey"
               android:orientation="horizontal"
-              android:paddingLeft="10dp">
+              >
 
     <org.ei.opensrp.view.customControls.CustomFontTextView
             android:id="@+id/label_sorted_by"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:text="@string/label_sorted_by"
-            style="@style/CustomFontTextViewStyle.StatusBar.Bold"/>
+            style="@style/CustomFontTextViewStyle.StatusBar"/>
 
     <org.ei.opensrp.view.customControls.CustomFontTextView
             android:id="@+id/sorted_by"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:paddingLeft="5dp"
-            style="@style/CustomFontTextViewStyle.StatusBar.Black"/>
+            style="@style/CustomFontTextViewStyle.StatusBar.Bold"/>
 
     <org.ei.opensrp.view.customControls.CustomFontTextView
             android:layout_width="wrap_content"
@@ -32,6 +32,28 @@
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:paddingLeft="5dp"
-            style="@style/CustomFontTextViewStyle.StatusBar.Black"/>
+            style="@style/CustomFontTextViewStyle.StatusBar.Bold"/>
+
+    <View
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        />
+
+    <org.ei.opensrp.view.customControls.CustomFontTextView
+        android:id="@+id/statusbar_today_str"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent" android:text="Today:"
+        android:paddingLeft="5dp"
+        style="@style/CustomFontTextViewStyle.StatusBar"
+        android:layout_gravity="right" />
+
+    <org.ei.opensrp.view.customControls.CustomFontTextView
+        android:id="@+id/statusbar_today"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent" android:text="Today is todays date"
+        style="@style/CustomFontTextViewStyle.StatusBar.Bold"
+        android:layout_gravity="right"
+        android:paddingRight="20dp" />
 
 </LinearLayout>

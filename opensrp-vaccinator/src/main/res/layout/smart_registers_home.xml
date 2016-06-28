@@ -10,7 +10,6 @@
             android:layout_weight="1"
             android:orientation="vertical"
             android:background="@drawable/bg_texture"
-        android:layout_gravity="center_vertical"
         android:gravity="center_vertical">
 
         <LinearLayout
@@ -59,7 +58,8 @@
 
                     style="@style/CustomFontTextViewStyle.Badge"
 
-                    />
+                    android:text="32"
+                    android:gravity="center" />
 
             </FrameLayout>
 
@@ -92,7 +92,9 @@
                     android:id="@+id/txt_child_register_client_count"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    style="@style/CustomFontTextViewStyle.Badge"/>
+                    style="@style/CustomFontTextViewStyle.Badge"
+                    android:text="20"
+                    android:gravity="center" />
 
             </FrameLayout>
 
@@ -112,23 +114,34 @@
                 <org.ei.opensrp.view.customControls.CustomFontTextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:height="115dp"
                     android:text="@string/home_field_monitor_label"
 
-                    style="@style/CustomFontTextViewStyle.Home.RegisterNameCustom"/>
+                    style="@style/CustomFontTextViewStyle.Home.RegisterName"/>
 
                 <org.ei.opensrp.view.customControls.CustomFontTextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text="@string/register_label"
-                    style="@style/CustomFontTextViewStyle.Home.RegisterLabelCustomForField"/>
+                    style="@style/CustomFontTextViewStyle.Home.RegisterLabel"/>
 
                 <org.ei.opensrp.view.customControls.CustomFontTextView
-                    android:id="@+id/txt_field_register_client_count"
+                    android:id="@+id/txt_field_register_client_countd"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
 
-                    style="@style/CustomFontTextViewStyle.Badge"/>
+                    style="@style/CustomFontTextViewStyle.Badge"
+                    android:layout_marginRight="75dp"
+                    android:text="0 D"
+                    android:gravity="center" />
+
+                <org.ei.opensrp.view.customControls.CustomFontTextView
+                    android:id="@+id/txt_field_register_client_countm"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+
+                    style="@style/CustomFontTextViewStyle.Badge"
+                    android:text="30 M"
+                    android:gravity="center" />
 
             </FrameLayout>
 
@@ -156,23 +169,24 @@
                 android:layout_height="50dp"
                 android:layout_weight="1"
                 android:drawableLeft="@drawable/ic_reporting"
-                android:drawablePadding="5dp"
-                android:paddingLeft="100dp"
-                android:paddingRight="185dp"
+                android:drawablePadding="40dp"
+                android:paddingLeft="150dp"
+                android:paddingRight="150dp"
                 android:text="@string/str_reporting"
-                style="@style/CustomFontTextViewStyle.Home.Buttons"/>
+                style="@style/CustomFontTextViewStyle.Home.Buttons"
+            android:gravity="center_vertical" />
 
         <org.ei.opensrp.view.customControls.CustomFontTextView
-                android:id="@+id/btn_videos"
+                android:id="@+id/btn_provider_profile"
                 android:layout_width="0dp"
                 android:layout_height="50dp"
                 android:layout_weight="1"
-                android:drawableLeft="@drawable/ic_tv"
-                android:drawablePadding="5dp"
+                android:drawableLeft="@drawable/profile_provider"
+                android:drawablePadding="15dp"
                 android:paddingLeft="150dp"
-                android:paddingRight="200dp"
-                android:text="@string/str_videos"
-                style="@style/CustomFontTextViewStyle.Home.Buttons"/>
+                android:paddingRight="150dp"
+                android:text="@string/str_provider_profile"
+                style="@style/CustomFontTextViewStyle.Home.Buttons" />
 
     </LinearLayout>
 
