@@ -1,6 +1,6 @@
 <model>
   <instance>
-    <BirthOutcome encounter_type="Birth Outcome" id="BirthOutcome" version="201610181351">
+    <BirthOutcome encounter_type="Birth Outcome" id="BirthOutcome" version="201611101152">
       <formhub>
         <uuid/>
       </formhub>
